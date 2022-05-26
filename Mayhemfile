@@ -1,5 +1,5 @@
 project: rnshah9/suitesparse
-target: suitesparse
+target: graphchk
 
 cmds:
   - cmd: /usr/local/bin/graphchk @@
