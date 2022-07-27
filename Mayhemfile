@@ -2,4 +2,4 @@ project: suitesparse
 target: graphchk
 
 cmds:
-  - cmd: /usr/local/bin/graphchk @@
+  - cmd: /graphchk @@
