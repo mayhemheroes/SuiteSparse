@@ -3,17 +3,11 @@ FROM --platform=linux/amd64 ubuntu:20.04 as builder
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential cmake
 
-ADD . /repo
+COPY . /repo
 WORKDIR /repo/metis-5.1.0
 RUN make config
 RUN make -j8
 RUN make install
 
-RUN mkdir -p /deps
-RUN ldd /usr/local/bin/graphchk | tr -s '[:blank:]' '\n' | grep '^/' | xargs -I % sh -c 'cp % /deps;'
-
 FROM ubuntu:20.04 as package
-
-COPY --from=builder /deps /deps
-COPY --from=builder /usr/local/bin/graphchk /usr/local/bin/graphchk
-ENV LD_LIBRARY_PATH=/deps
+COPY --from=builder /usr/local/bin/graphchk /
