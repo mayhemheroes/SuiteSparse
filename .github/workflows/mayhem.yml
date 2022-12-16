@@ -59,7 +59,8 @@ jobs:
       fail-fast: false
       matrix:
         mayhemfile:
-          - mayhem/Mayhemfile
+          - mayhem/Mayhemfile_libmetis__InitRandom
+          - mayhem/Mayhemfile_graphchk
 
     steps:
       - uses: actions/checkout@v3
