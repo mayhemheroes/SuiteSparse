@@ -1,0 +1,6 @@
+project: suitesparse
+target: libmetis--initrandmo
+
+cmds:
+  - cmd: /fuzz_libmetis__InitRandom
+    libfuzzer: true
