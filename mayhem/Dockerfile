@@ -8,8 +8,8 @@ WORKDIR /repo/metis-5.1.0
 RUN make config
 RUN make -j8
 RUN make install
-RUN clang++ /repo/mayhem/fuzz.cpp -fsanitize=fuzzer,address /repo/metis-5.1.0/build/Linux-x86_64/libmetis/libmetis.a -o /fuzz
+RUN clang++ /repo/mayhem/fuzz_libmetis__InitRandom.cpp -fsanitize=fuzzer,address /repo/metis-5.1.0/build/Linux-x86_64/libmetis/libmetis.a -o /fuzz
 
 FROM ubuntu:20.04 as package
 COPY --from=builder /usr/local/bin/graphchk /
-COPY --from=builder /fuzz /fuzz
+COPY --from=builder /fuzz /fuzz_libmetis__InitRandom
