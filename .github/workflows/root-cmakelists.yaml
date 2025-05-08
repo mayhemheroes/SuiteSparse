@@ -84,6 +84,7 @@ jobs:
         id: ccache-prepare
         run: |
           echo "key=ccache:${{ matrix.os }}:root:${{ matrix.compiler }}:${{ matrix.cuda }}:${{ matrix.link }}:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+        # "
 
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
