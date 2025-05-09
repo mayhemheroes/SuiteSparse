@@ -1,3 +1,7 @@
+May 2025: version 7.10.4
+
+    * in progress: LAGraph v1.2, GraphBLAS v10.1.0
+
 May 5, 2025: version 7.10.3
 
     * SuiteSparse_config: do not print info about the BLAS if no BLAS used,
