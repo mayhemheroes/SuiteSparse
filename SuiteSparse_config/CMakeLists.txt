@@ -278,27 +278,38 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT SuiteSparse_configTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/SuiteSparse_configTargets.cmake )
+
+    # install export target and config for find_package
+    install ( EXPORT SuiteSparse_configTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse_config )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS SuiteSparseConfig_static
-        EXPORT SuiteSparse_configTargets
+        EXPORT SuiteSparse_configTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT SuiteSparse_configTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/SuiteSparse_configTargets_static.cmake )
+
+    # install export target and config for find_package
+    install ( EXPORT SuiteSparse_configTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse_config )
 endif ( )
+
 install ( FILES
     ${SUITESPARSE_CMAKE_MODULES}
     DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse
     COMPONENT Development )
-
-# create (temporary) export target file during build
-export ( EXPORT SuiteSparse_configTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/SuiteSparse_configTargets.cmake )
-
-# install export target and config for find_package
-install ( EXPORT SuiteSparse_configTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse_config )
 
 configure_package_config_file (
     Config/SuiteSparse_configConfig.cmake.in

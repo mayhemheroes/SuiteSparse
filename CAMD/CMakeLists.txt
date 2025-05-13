@@ -162,23 +162,33 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CAMDTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CAMDTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CAMDTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CAMD )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS CAMD_static
-        EXPORT CAMDTargets
+        EXPORT CAMDTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CAMDTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CAMDTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CAMDTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CAMD )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT CAMDTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/CAMDTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT CAMDTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CAMD )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )

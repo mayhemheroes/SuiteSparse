@@ -651,23 +651,33 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CHOLMODTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CHOLMODTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CHOLMODTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CHOLMOD )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS CHOLMOD_static
-        EXPORT CHOLMODTargets
+        EXPORT CHOLMODTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CHOLMODTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CHOLMODTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CHOLMODTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CHOLMOD )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT CHOLMODTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/CHOLMODTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT CHOLMODTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CHOLMOD )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE on )
