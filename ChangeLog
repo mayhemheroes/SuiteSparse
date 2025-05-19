@@ -4,7 +4,8 @@ May 2025: version 7.10.4
     * LAGraph v1.2: many new experimental algorithms, LAGraph_Random in src/
     * GraphBLAS v10.1.0: risc-V vectorization, GRAPHBLAS_VANILLA (optional;
         to disable GxB extensions), and cmake revisions to ensure gcc is not
-        used to compile GraphBLAS on the Power processor.
+        used to compile GraphBLAS on the Power or s390 processors (as a
+        workaround around a bug in the gcc compiler).
     * Package versions in this release: (* denotes a new version)
         SuiteSparse_config 7.10.4   *
         AMD 3.3.3
