@@ -226,6 +226,7 @@ double west0067_bc [67] = {
 void test_bc (void)
 {
     LAGraph_Init (msg) ;
+//  OK (LG_SET_BURBLE (true)) ;
     GrB_Matrix A = NULL ;
     GrB_Vector centrality = NULL ;
     int niters = 0 ;
@@ -278,7 +279,7 @@ void test_bc (void)
 // test_bc_brutal: test BetweenessCentraliy with brutal malloc debugging
 //------------------------------------------------------------------------------
 
-#if LAGRAPH_SUITESPARSE
+#if LG_BRUTAL_TESTS
 void test_bc_brutal (void)
 {
     OK (LG_brutal_setup (msg)) ;
@@ -318,7 +319,7 @@ void test_bc_brutal (void)
 
 TEST_LIST = {
     {"test_bc", test_bc},
-    #if LAGRAPH_SUITESPARSE
+    #if LG_BRUTAL_TESTS
     {"test_bc_brutal", test_bc_brutal },
     #endif
     {NULL, NULL}

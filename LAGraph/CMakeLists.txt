@@ -2,7 +2,7 @@
 # LAGraph/CMakeLists.txt:  cmake script for LAGraph
 #-------------------------------------------------------------------------------
 
-# LAGraph, (c) 2019-2023 by The LAGraph Contributors, All Rights Reserved.
+# LAGraph, (c) 2019-2025 by The LAGraph Contributors, All Rights Reserved.
 # SPDX-License-Identifier: BSD-2-Clause
 #
 # For additional details (including references to third party source code and
@@ -13,9 +13,9 @@
 
 #-------------------------------------------------------------------------------
 
-# CMakeLists.txt: instructions for cmake to build LAGraph.  An ANSI C11
-# compiler is required.  First, install any GraphBLAS library.  Alternatively,
-# use ../GraphBLAS (see comments below).
+# CMakeLists.txt: instructions for cmake to build LAGraph.  A C11 compiler is
+# required.  First, install any GraphBLAS library.  Alternatively, use
+# ../GraphBLAS (see comments below).
 #
 # To compile the LAGraph library and its tests and benchmarks, and run the
 # tests:
@@ -25,7 +25,7 @@
 #   make
 #   make test
 #
-# If that fails for any reason, make sure your compiler supports ANSI C11.  You
+# If that fails for any reason, make sure your compiler supports C11.  You
 # could try changing your compiler for the cmake command, for example:
 #
 #   CC=icc cmake ..
@@ -39,10 +39,10 @@
 cmake_minimum_required ( VERSION 3.20 ) # LAGraph can be built stand-alone
 
 # version of LAGraph
-set ( LAGraph_DATE "Feb 20, 2025" )
+set ( LAGraph_DATE "FIXME, 2025" )
 set ( LAGraph_VERSION_MAJOR 1 CACHE STRING "" FORCE )
-set ( LAGraph_VERSION_MINOR 1 CACHE STRING "" FORCE )
-set ( LAGraph_VERSION_SUB   5 CACHE STRING "" FORCE )
+set ( LAGraph_VERSION_MINOR 2 CACHE STRING "" FORCE )
+set ( LAGraph_VERSION_SUB   0 CACHE STRING "" FORCE )
 
 message ( STATUS "Building LAGraph version: v"
     ${LAGraph_VERSION_MAJOR}.
@@ -91,7 +91,7 @@ check_symbol_exists ( fmax "math.h" NO_LIBM )
 
 if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     if ( COVERAGE )
-        message ( STATUS "============== Code coverage enabled ===============" )
+        message ( STATUS "============= Code coverage enabled ===============" )
         set ( CMAKE_BUILD_TYPE Debug )
         # On the Mac, you need gcov-11 from homebrew (part of gcc-11):
         # and uncomment this line:
@@ -127,6 +127,7 @@ endif ( )
 
 if ( SUITESPARSE_ROOT_CMAKELISTS )
 
+    message ( STATUS "Looking for GraphBLAS in SuiteSparse" )
     if ( TARGET GraphBLAS )
         add_library ( GraphBLAS::GraphBLAS ALIAS GraphBLAS )
     else ( )
@@ -153,6 +154,7 @@ else ( )
     # No package version is explicitly stated here; an arbitrary GraphBLAS
     # library can have any version number.  For SuiteSparse:GraphBLAS, LAGraph
     # requires v7.1.0 or later, which is checked in LAGraph.h.
+    message ( STATUS "Looking for GraphBLAS with FindGraphBLAS.cmake" )
     find_package ( GraphBLAS MODULE REQUIRED )
 
 endif ( )
@@ -219,6 +221,7 @@ message ( STATUS "CMAKE have OpenMP:         " ${OPENMP_C_FOUND} )
 
 include_directories ( ${PROJECT_SOURCE_DIR}/include
                       ${PROJECT_SOURCE_DIR}/src/utility
+                      ${PROJECT_SOURCE_DIR}/src/algorithm
                       ${PROJECT_SOURCE_DIR}/test/include )
 
 # tell LAGraph where to find its own source (for LAGraph/data files)
@@ -247,6 +250,10 @@ elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" )
     #if ( CMAKE_C_COMPILER_VERSION VERSION_LESS 18.0 )
     #    message ( FATAL_ERROR "icc version must be at least 18.0" )
     #endif ( )
+elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang" )
+    # options for Apple Clang
+#    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fsanitize=address" )
+#    set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fsanitize=thread" )
 elseif ( "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" AND NOT "${CMAKE_C_COMPILER_FRONTEND_VARIANT}" STREQUAL "MSVC" )
     # options for clang
     set ( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -O3 " )
@@ -287,6 +294,7 @@ message ( STATUS "CMAKE C flags: " ${CMAKE_C_FLAGS} )
 # enable testing and add subdirectories
 #-------------------------------------------------------------------------------
 
+set ( MEMORYCHECK_COMMAND_OPTIONS "--show-reachable=no" )
 include ( CTest )
 
 add_subdirectory ( src )
@@ -317,6 +325,31 @@ if ( BUILD_STATIC_LIBS )
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
 endif ( )
 
+#-------------------------------------------------------------------------------
+# LAGraph uses OpenMP by default
+#-------------------------------------------------------------------------------
+
+if ( LAGRAPH_HAS_OPENMP )
+    message ( STATUS "CMAKE OpenMP libraries:    ${OpenMP_C_LIBRARIES}" )
+    message ( STATUS "CMAKE OpenMP include:      ${OpenMP_C_INCLUDE_DIRS}" )
+    if ( BUILD_SHARED_LIBS )
+        target_link_libraries ( LAGraph PRIVATE OpenMP::OpenMP_C )
+    endif ( )
+    if ( BUILD_STATIC_LIBS )
+        target_link_libraries ( LAGraph_static PRIVATE OpenMP::OpenMP_C )
+    endif ( )
+    message ( STATUS "CMAKE OpenMP C flags:      ${OpenMP_C_FLAGS}" )
+else ( )
+    if ( NOT COVERAGE )
+        message ( WARNING
+        "WARNING:  OpenMP was not found (or was disabled with "
+        "LAGRAPH_USE_OPENMP; some LAGraph methods will be slow.)" )
+    endif ( )
+endif ( )
+
+#-------------------------------------------------------------------------------
+# LAGraph targets and package configuration
+#-------------------------------------------------------------------------------
 
 # create (temporary) export target file during build
 export ( EXPORT LAGraphTargets
@@ -424,3 +457,4 @@ if ( NOT MSVC )
         ${CMAKE_CURRENT_BINARY_DIR}/LAGraph.pc
         DESTINATION ${SUITESPARSE_PKGFILEDIR}/pkgconfig )
 endif ( )
+
