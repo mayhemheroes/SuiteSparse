@@ -107,31 +107,32 @@ jobs:
         # https://manpages.ubuntu.com/manpages/noble/man5/sources.list.5.html
         run: |
           sudo dpkg --add-architecture ${{ matrix.arch }}
+          UBUNTU_CODENAME=$(cat /etc/os-release | grep ^UBUNTU_CODENAME | cut -d= -f2)
           sudo bash -c 'cat - >/etc/apt/sources.list.d/ubuntu.sources' <<-EOF
           	Types: deb
           	URIs: http://archive.ubuntu.com/ubuntu/
-          	Suites: noble noble-updates noble-backports
+          	Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
           	Components: main restricted universe multiverse
           	Architectures: amd64
           	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
           	
           	Types: deb
           	URIs: http://security.ubuntu.com/ubuntu/
-          	Suites: noble-security
+          	Suites: $UBUNTU_CODENAME-security
           	Components: main restricted universe multiverse
           	Architectures: amd64
           	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
           	
           	Types: deb
           	URIs: http://ports.ubuntu.com/ubuntu-ports/
-          	Suites: noble noble-updates noble-backports
+          	Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
           	Components: main restricted universe multiverse
           	Architectures: ${{ matrix.arch }}
           	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
           	
           	Types: deb
           	URIs: http://security.ports.ubuntu.com/ubuntu-ports/
-          	Suites: noble-security
+          	Suites: $UBUNTU_CODENAME-security
           	Components: main restricted universe multiverse
           	Architectures: ${{ matrix.arch }}
           	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
