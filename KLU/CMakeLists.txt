@@ -343,24 +343,34 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT KLUTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/KLUTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT KLUTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/KLU )
 endif ( )
 
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS KLU_static
-        EXPORT KLUTargets
+        EXPORT KLUTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT KLUTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/KLUTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT KLUTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/KLU )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT KLUTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/KLUTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT KLUTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/KLU )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )
@@ -435,23 +445,33 @@ if ( KLU_HAS_CHOLMOD )
             ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
             RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
             PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+        # create (temporary) export target file during build
+        export ( EXPORT KLU_CHOLMODTargets
+            NAMESPACE SuiteSparse::
+            FILE ${CMAKE_CURRENT_BINARY_DIR}/KLU_CHOLMODTargets.cmake )
+
+        # install export target, config and version files for find_package
+        install ( EXPORT KLU_CHOLMODTargets
+            NAMESPACE SuiteSparse::
+            DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/KLU_CHOLMOD )
     endif ( )
     if ( BUILD_STATIC_LIBS )
         install ( TARGETS KLU_CHOLMOD_static
-            EXPORT KLU_CHOLMODTargets
+            EXPORT KLU_CHOLMODTargets_static
             ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
             PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+        # create (temporary) export target file during build
+        export ( EXPORT KLU_CHOLMODTargets_static
+            NAMESPACE SuiteSparse::
+            FILE ${CMAKE_CURRENT_BINARY_DIR}/KLU_CHOLMODTargets_static.cmake )
+
+        # install export target, config and version files for find_package
+        install ( EXPORT KLU_CHOLMODTargets_static
+            NAMESPACE SuiteSparse::
+            DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/KLU_CHOLMOD )
     endif ( )
-
-    # create (temporary) export target file during build
-    export ( EXPORT KLU_CHOLMODTargets
-        NAMESPACE SuiteSparse::
-        FILE ${CMAKE_CURRENT_BINARY_DIR}/KLU_CHOLMODTargets.cmake )
-
-    # install export target, config and version files for find_package
-    install ( EXPORT KLU_CHOLMODTargets
-        NAMESPACE SuiteSparse::
-        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/KLU_CHOLMOD )
 
     # generate config file to be used in common build tree
     set ( SUITESPARSE_IN_BUILD_TREE ON )

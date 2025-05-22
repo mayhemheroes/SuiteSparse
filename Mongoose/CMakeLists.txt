@@ -555,25 +555,35 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT SuiteSparse_MongooseTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/SuiteSparse_MongooseTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT SuiteSparse_MongooseTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse_Mongoose )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS Mongoose_static
-        EXPORT SuiteSparse_MongooseTargets
+        EXPORT SuiteSparse_MongooseTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT SuiteSparse_MongooseTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/SuiteSparse_MongooseTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT SuiteSparse_MongooseTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse_Mongoose )
 endif ( )
 install ( TARGETS mongoose_exe
     RUNTIME DESTINATION ${SUITESPARSE_BINDIR} )
-
-# create (temporary) export target file during build
-export ( EXPORT SuiteSparse_MongooseTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/SuiteSparse_MongooseTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT SuiteSparse_MongooseTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SuiteSparse_Mongoose )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )

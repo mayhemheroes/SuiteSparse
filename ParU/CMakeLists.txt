@@ -298,24 +298,34 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT ParUTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/ParUTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT ParUTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/ParU )
 endif ( )
 
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS ParU_static
-        EXPORT ParUTargets
+        EXPORT ParUTargets_static
         ARCHIVE       DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT ParUTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/ParUTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT ParUTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/ParU )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT ParUTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/ParUTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT ParUTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/ParU )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )

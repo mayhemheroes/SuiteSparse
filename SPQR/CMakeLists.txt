@@ -251,26 +251,36 @@ if ( BUILD_SHARED_LIBS )
         LIBRARY DESTINATION ${SUITESPARSE_LIBDIR}
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT SPQRTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/SPQRTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT SPQRTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SPQR )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS SPQR_static
-        EXPORT SPQRTargets
+        EXPORT SPQRTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT SPQRTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/SPQRTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT SPQRTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SPQR )
 endif ( )
 
 install ( FILES "Include/SuiteSparseQR_C.h"
     "Include/SuiteSparseQR_definitions.h"
     "Include/SuiteSparseQR.hpp" DESTINATION ${SUITESPARSE_INCLUDEDIR} )
-
-# create (temporary) export target file during build
-export ( EXPORT SPQRTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/SPQRTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT SPQRTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/SPQR )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )

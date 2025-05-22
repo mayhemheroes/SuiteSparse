@@ -159,23 +159,33 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CCOLAMDTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CCOLAMDTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CCOLAMDTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CCOLAMD )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS CCOLAMD_static
-        EXPORT CCOLAMDTargets
+        EXPORT CCOLAMDTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CCOLAMDTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CCOLAMDTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CCOLAMDTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CCOLAMD )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT CCOLAMDTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/CCOLAMDTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT CCOLAMDTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CCOLAMD )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )

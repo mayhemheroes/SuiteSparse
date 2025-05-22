@@ -199,23 +199,33 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CXSparseTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CXSparseTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CXSparseTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CXSparse )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS CXSparse_static
-        EXPORT CXSparseTargets
+        EXPORT CXSparseTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT CXSparseTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/CXSparseTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT CXSparseTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CXSparse )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT CXSparseTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/CXSparseTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT CXSparseTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/CXSparse )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )

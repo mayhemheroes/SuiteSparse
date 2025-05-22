@@ -447,23 +447,33 @@ if ( BUILD_SHARED_LIBS )
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         RUNTIME DESTINATION ${SUITESPARSE_BINDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT UMFPACKTargets
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/UMFPACKTargets.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT UMFPACKTargets
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/UMFPACK )
 endif ( )
 if ( BUILD_STATIC_LIBS )
     install ( TARGETS UMFPACK_static
-        EXPORT UMFPACKTargets
+        EXPORT UMFPACKTargets_static
         ARCHIVE DESTINATION ${SUITESPARSE_LIBDIR}
         PUBLIC_HEADER DESTINATION ${SUITESPARSE_INCLUDEDIR} )
+
+    # create (temporary) export target file during build
+    export ( EXPORT UMFPACKTargets_static
+        NAMESPACE SuiteSparse::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/UMFPACKTargets_static.cmake )
+
+    # install export target, config and version files for find_package
+    install ( EXPORT UMFPACKTargets_static
+        NAMESPACE SuiteSparse::
+        DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/UMFPACK )
 endif ( )
-
-# create (temporary) export target file during build
-export ( EXPORT UMFPACKTargets
-    NAMESPACE SuiteSparse::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/UMFPACKTargets.cmake )
-
-# install export target, config and version files for find_package
-install ( EXPORT UMFPACKTargets
-    NAMESPACE SuiteSparse::
-    DESTINATION ${SUITESPARSE_PKGFILEDIR}/cmake/UMFPACK )
 
 # generate config file to be used in common build tree
 set ( SUITESPARSE_IN_BUILD_TREE ON )
