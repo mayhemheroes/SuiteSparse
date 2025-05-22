@@ -36,46 +36,46 @@ jobs:
         arch: [armhf, ppc64el, s390x, riscv64]
         include:
           - arch: armhf
-            target_system: arm-linux-gnueabihf
-            cross-toolchain: g++-9-arm-linux-gnueabihf
-            fortran-cross-toolchain: gfortran-10-arm-linux-gnueabihf
-            cc: "arm-linux-gnueabihf-gcc-9"
-            cxx: "arm-linux-gnueabihf-g++-9"
-            fc: "arm-linux-gnueabihf-gfortran-10"
+            target-triple: arm-linux-gnueabihf
+            # cross-toolchain: g++-9-arm-linux-gnueabihf
+            # fortran-cross-toolchain: gfortran-14-arm-linux-gnueabihf
+            # cc: "arm-linux-gnueabihf-gcc-9"
+            # cxx: "arm-linux-gnueabihf-g++-9"
+            # fc: "arm-linux-gnueabihf-gfortran-14"
             ccache-max: 64M
           - arch: ppc64el
-            target_system: powerpc64le-linux-gnu
-            cross-toolchain: g++-9-powerpc64le-linux-gnu 
-            fortran-cross-toolchain: gfortran-10-powerpc64le-linux-gnu
-            cc: "powerpc64le-linux-gnu-gcc-9"
-            cxx: "powerpc64le-linux-gnu-g++-9"
-            fc: "powerpc64le-linux-gnu-gfortran-10"
+            target-triple: powerpc64le-linux-gnu
+            # cross-toolchain: g++-9-powerpc64le-linux-gnu 
+            # fortran-cross-toolchain: gfortran-14-powerpc64le-linux-gnu
+            # cc: "powerpc64le-linux-gnu-gcc-9"
+            # cxx: "powerpc64le-linux-gnu-g++-9"
+            # fc: "powerpc64le-linux-gnu-gfortran-14"
             ccache-max: 64M
           - arch: s390x
-            target_system: s390x-linux-gnu
-            cross-toolchain: g++-9-s390x-linux-gnu 
-            fortran-cross-toolchain: gfortran-10-s390x-linux-gnu
-            cc: "s390x-linux-gnu-gcc-9"
-            cxx: "s390x-linux-gnu-g++-9"
-            fc: "s390x-linux-gnu-gfortran-10"
+            target-triple: s390x-linux-gnu
+            # cross-toolchain: g++-9-s390x-linux-gnu 
+            # fortran-cross-toolchain: gfortran-14-s390x-linux-gnu
+            # cc: "s390x-linux-gnu-gcc-9"
+            # cxx: "s390x-linux-gnu-g++-9"
+            # fc: "s390x-linux-gnu-gfortran-14"
             ccache-max: 64M
           - arch: riscv64
-            target_system: riscv64-linux-gnu
-            cross-toolchain: g++-9-riscv64-linux-gnu 
-            fortran-cross-toolchain: gfortran-10-riscv64-linux-gnu
-            cc: "riscv64-linux-gnu-gcc-9"
-            cxx: "riscv64-linux-gnu-g++-9"
-            fc: "riscv64-linux-gnu-gfortran-10"
+            target-triple: riscv64-linux-gnu
+            # cross-toolchain: g++-9-riscv64-linux-gnu 
+            # fortran-cross-toolchain: gfortran-14-riscv64-linux-gnu
+            # cc: "riscv64-linux-gnu-gcc-9"
+            # cxx: "riscv64-linux-gnu-g++-9"
+            # fc: "riscv64-linux-gnu-gfortran-14"
             ccache-max: 64M
 
     name: cross-compile (${{ matrix.arch }})
 
     env:
-      CC: ${{ matrix.cc }}
-      CXX: ${{ matrix.cxx }}
-      FC: ${{ matrix.fc }}
-      LD_LIBRARY_PATH: "/usr/${{ matrix.target_system }}/lib"
-      LIBRARY_PATH: "/usr/${{ matrix.target_system }}/lib"
+      CC: clang -target ${{ matrix.target-triple }}
+      CXX: clang++ -target ${{ matrix.target-triple }}
+      FC: ${{ matrix.target-triple }}-gfortran-14
+      LD_LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
+      LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
 
     steps:
       - name: get CPU information
@@ -83,7 +83,10 @@ jobs:
 
       - name: install some aux utilities
         run: |
-          echo "::group::Install cross-toolchain for ${{ matrix.arch }}"
+          echo "::group::Update package indexes"
+          sudo apt update
+          echo "::endgroup::"
+          echo "::group::Install cmake make ccache automake libtool qemu-user-binfmt"
           sudo apt -y install \
             cmake \
             make \
@@ -99,7 +102,7 @@ jobs:
       - name: install cross-toolchain
         run: |
           echo "::group::Install cross-toolchain for ${{ matrix.arch }}"
-          sudo apt -y install ${{ matrix.cross-toolchain }} ${{ matrix.fortran-cross-toolchain }}
+          sudo apt -y install clang gfortran-14-${{ matrix.target-triple }}
           echo "::endgroup::"
 
       - name: configure Multiarch
@@ -192,7 +195,7 @@ jobs:
             printf "   \033[0;32m==>\033[0m Building library \033[0;32m${lib}\033[0m\n"
             echo "::group::Configure $lib"
             cd ${GITHUB_WORKSPACE}/${lib}/build
-            PKG_CONFIG_PATH=/usr/lib/${{ matrix.target_system }}/pkgconfig/ \
+            PKG_CONFIG_PATH=/usr/lib/${{ matrix.target-triple }}/pkgconfig/ \
             cmake -DCMAKE_BUILD_TYPE="Release" \
                   -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}" \
                   -DCMAKE_C_COMPILER_LAUNCHER="ccache" \
