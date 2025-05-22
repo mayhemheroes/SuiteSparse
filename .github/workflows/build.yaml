@@ -140,6 +140,7 @@ jobs:
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
       - name: build
+        id: build
         run: |
           IFS=':' read -r -a libs <<< "${BUILD_LIBS}"
           for lib in "${libs[@]}"; do
@@ -184,12 +185,14 @@ jobs:
           done
 
       - name: ccache status
+        if: always() && (steps.build.outcome != 'skipped')
         continue-on-error: true
         run: ccache -s
 
       - name: save ccache
-        # Save the cache after we are done (successfully) building
+        # Save the cache after we are done building
         # This helps to retain the ccache even if the subsequent steps are failing.
+        if: always() && (steps.build.outcome != 'skipped')
         uses: actions/cache/save@v4
         with:
           path: ~/.ccache
