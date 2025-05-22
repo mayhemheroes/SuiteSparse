@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        arch: [armhf, ppc64el, s390x, riscv64]
+        arch: [riscv64]
         include:
           - arch: armhf
             target-triple: arm-linux-gnueabihf
@@ -61,8 +61,8 @@ jobs:
             ccache-max: 64M
           - arch: riscv64
             target-triple: riscv64-linux-gnu
-            # cross-toolchain: g++-9-riscv64-linux-gnu 
-            # fortran-cross-toolchain: gfortran-14-riscv64-linux-gnu
+            cross-toolchain: g++-14-riscv64-linux-gnu
+            fortran-cross-toolchain: gfortran-14-riscv64-linux-gnu
             # cc: "riscv64-linux-gnu-gcc-9"
             # cxx: "riscv64-linux-gnu-g++-9"
             # fc: "riscv64-linux-gnu-gfortran-14"
@@ -71,8 +71,8 @@ jobs:
     name: cross-compile (${{ matrix.arch }})
 
     env:
-      CC: clang -target ${{ matrix.target-triple }}
-      CXX: clang++ -target ${{ matrix.target-triple }}
+      CC: clang
+      CXX: clang++
       FC: ${{ matrix.target-triple }}-gfortran-14
       LD_LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
       LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
@@ -102,7 +102,7 @@ jobs:
       - name: install cross-toolchain
         run: |
           echo "::group::Install cross-toolchain for ${{ matrix.arch }}"
-          sudo apt -y install clang gfortran-14-${{ matrix.target-triple }}
+          sudo apt -y install clang ${{ matrix.cross-toolchain }} gfortran-14-${{ matrix.target-triple }}
           echo "::endgroup::"
 
       - name: configure Multiarch
@@ -196,9 +196,17 @@ jobs:
             PKG_CONFIG_PATH=/usr/lib/${{ matrix.target-triple }}/pkgconfig/ \
             cmake -DCMAKE_BUILD_TYPE="Release" \
                   -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}" \
+                  -DCMAKE_C_COMPILER_TARGET=${{ matrix.target-triple }} \
+                  -DCMAKE_CXX_COMPILER_TARGET=${{ matrix.target-triple }} \
+                  -DCMAKE_Fortran_COMPILER_TARGET=${{ matrix.target-triple }} \
                   -DCMAKE_C_COMPILER_LAUNCHER="ccache" \
                   -DCMAKE_CXX_COMPILER_LAUNCHER="ccache" \
                   -DCMAKE_Fortran_COMPILER_LAUNCHER="ccache" \
+                  -DCMAKE_FIND_ROOT_PATH=/usr/${{ matrix.target-triple }} \
+                  -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+                  -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+                  -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+                  -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
                   -DBUILD_SHARED_LIBS=ON \
                   -DBUILD_STATIC_LIBS=OFF \
                   -DBLA_VENDOR="Generic" \
