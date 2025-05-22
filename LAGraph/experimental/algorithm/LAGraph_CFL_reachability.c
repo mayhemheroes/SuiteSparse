@@ -22,6 +22,10 @@
         GrB_free(&identity_matrix);                                         \
         LAGraph_Free ((void **) &T, msg);                                   \
         LAGraph_Free ((void **) &indexes, msg);                             \
+        LAGraph_Free((void**) &t_empty_flags, NULL);                        \
+        LAGraph_Free((void**) &eps_rules, NULL);                            \
+        LAGraph_Free((void**) &term_rules, NULL);                           \
+        LAGraph_Free((void**) &bin_rules, NULL);                            \
     }
 
 #define LG_FREE_ALL                                                         \
@@ -137,7 +141,7 @@ GrB_Info LAGraph_CFL_reachability
 #if LAGRAPH_SUITESPARSE
     // Declare workspace and clear the msg string, if not NULL
     GrB_Matrix *T;
-    bool *t_empty_flags; // t_empty_flags[i] == true <=> T[i] is empty
+    bool *t_empty_flags = NULL ; // t_empty_flags[i] == true <=> T[i] is empty
     GrB_Matrix identity_matrix = NULL;
     uint64_t *nnzs = NULL;
     LG_CLEAR_MSG;
@@ -145,6 +149,10 @@ GrB_Info LAGraph_CFL_reachability
     bool iso_flag = false;
     GrB_Index *indexes = NULL;
 
+    // Arrays for processing rules
+    size_t *eps_rules, eps_rules_count = 0;   // [Variable -> eps]
+    size_t *term_rules, term_rules_count = 0; // [Variable -> term]
+    size_t *bin_rules, bin_rules_count = 0;   // [Variable -> AB]
 
     GrB_Scalar true_scalar;
     GrB_Scalar_new(&true_scalar, GrB_BOOL);
@@ -194,10 +202,6 @@ GrB_Info LAGraph_CFL_reachability
         t_empty_flags[i] = true;
     }
 
-    // Arrays for processing rules
-    size_t *eps_rules, eps_rules_count = 0;   // [Variable -> eps]
-    size_t *term_rules, term_rules_count = 0; // [Variable -> term]
-    size_t *bin_rules, bin_rules_count = 0;   // [Variable -> AB]
     LG_TRY(LAGraph_Calloc((void **) &eps_rules, rules_count, sizeof(size_t), msg)) ;
     LG_TRY(LAGraph_Calloc((void **) &term_rules, rules_count, sizeof(size_t), msg)) ;
     LG_TRY(LAGraph_Calloc((void **) &bin_rules, rules_count, sizeof(size_t), msg)) ;
@@ -359,11 +363,6 @@ GrB_Info LAGraph_CFL_reachability
             
         }
     }
-
-    LAGraph_Free((void**) &t_empty_flags, NULL);
-    LAGraph_Free((void**) &eps_rules, NULL);
-    LAGraph_Free((void**) &term_rules, NULL);
-    LAGraph_Free((void**) &bin_rules, NULL);
 
     #ifdef DEBUG_CFL_REACHBILITY
         for (int32_t i = 0; i < nonterms_count; i++) {

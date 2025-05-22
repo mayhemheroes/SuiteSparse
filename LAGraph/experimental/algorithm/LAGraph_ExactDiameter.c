@@ -35,6 +35,7 @@
     GrB_free (&ecc) ;       \
     GrB_free (&level) ;     \
     GrB_free (&srcs) ;      \
+    LAGraph_Free((void**) &sources, NULL);  \
 }
 
 #define LG_FREE_ALL             \
@@ -72,6 +73,7 @@ int LAGraph_ExactDiameter
     GrB_Matrix level = NULL;          // work matrix for storing msbfs level info
     GrB_Index d ;                     // diameter
     GrB_Vector srcs = NULL ;
+    GrB_Index *sources = NULL ;
 
     bool compute_periphery  = (peripheral != NULL) ;
     if (compute_periphery ) (*peripheral) = NULL ;
@@ -111,7 +113,6 @@ int LAGraph_ExactDiameter
             nsrcs = n - setStart;
         }
         GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
-        GrB_Index *sources;
         GRB_TRY (LAGraph_Calloc((void **) &sources, nsrcs, sizeof(GrB_Index), msg)) ;
         for (int64_t i = 0; i < nsrcs; i++){
             GRB_TRY (GrB_Vector_setElement (srcs, setStart+i, i)) ;

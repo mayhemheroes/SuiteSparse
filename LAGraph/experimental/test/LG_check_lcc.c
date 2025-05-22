@@ -152,7 +152,7 @@ int LG_check_lcc(
     LAGraph_Calloc ((void **) &vb, n, sizeof (int8_t), msg) ;
     LAGraph_Malloc ((void **) &vx, n, sizeof (double), msg) ;
 
-    int i;
+    int64_t i;
     GrB_Index nvals = 0 ;
 
 #pragma omp parallel for schedule(dynamic) reduction(+ : nvals)

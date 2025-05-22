@@ -277,7 +277,7 @@ int LAGraph_cdlp
 
     for (int iteration = 0; iteration < itermax; iteration++) {
 
-        int i;
+        int64_t i;
 #pragma omp parallel for schedule(dynamic)
         for (i = 0; i < n; i++) {
             #ifdef _OPENMP
