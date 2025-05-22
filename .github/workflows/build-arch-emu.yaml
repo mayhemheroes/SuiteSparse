@@ -131,6 +131,8 @@ jobs:
       - name: LAGraph memcheck
         if: matrix.arch == 'armv7'
         run: |
+            cd ${GITHUB_WORKSPACE}/GraphBLAS
+            make cdebug
             cd ${GITHUB_WORKSPACE}/LAGraph
             make memcheck
 
