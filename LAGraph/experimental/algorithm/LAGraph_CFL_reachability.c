@@ -137,7 +137,7 @@ GrB_Info LAGraph_CFL_reachability
 #if LAGRAPH_SUITESPARSE
     // Declare workspace and clear the msg string, if not NULL
     GrB_Matrix *T;
-    bool t_empty_flags[nonterms_count]; // t_empty_flags[i] == true <=> T[i] is empty
+    bool *t_empty_flags; // t_empty_flags[i] == true <=> T[i] is empty
     GrB_Matrix identity_matrix = NULL;
     uint64_t *nnzs = NULL;
     LG_CLEAR_MSG;
@@ -149,8 +149,9 @@ GrB_Info LAGraph_CFL_reachability
     GrB_Scalar true_scalar;
     GrB_Scalar_new(&true_scalar, GrB_BOOL);
     GrB_Scalar_setElement_BOOL(true_scalar, true);
-    
+
     LG_TRY(LAGraph_Calloc((void **) &T, nonterms_count, sizeof(GrB_Matrix), msg));
+    LG_TRY(LAGraph_Calloc((void **) &t_empty_flags, nonterms_count, sizeof(bool), msg)) ;
 
     LG_ASSERT_MSG(terms_count > 0, GrB_INVALID_VALUE,
                   "The number of terminals must be greater than zero.");
@@ -194,9 +195,12 @@ GrB_Info LAGraph_CFL_reachability
     }
 
     // Arrays for processing rules
-    size_t eps_rules[rules_count], eps_rules_count = 0;   // [Variable -> eps]
-    size_t term_rules[rules_count], term_rules_count = 0; // [Variable -> term]
-    size_t bin_rules[rules_count], bin_rules_count = 0;   // [Variable -> AB]
+    size_t *eps_rules, eps_rules_count = 0;   // [Variable -> eps]
+    size_t *term_rules, term_rules_count = 0; // [Variable -> term]
+    size_t *bin_rules, bin_rules_count = 0;   // [Variable -> AB]
+    LG_TRY(LAGraph_Calloc((void **) &eps_rules, rules_count, sizeof(size_t), msg)) ;
+    LG_TRY(LAGraph_Calloc((void **) &term_rules, rules_count, sizeof(size_t), msg)) ;
+    LG_TRY(LAGraph_Calloc((void **) &bin_rules, rules_count, sizeof(size_t), msg)) ;
 
     // Process rules
     typedef struct {
@@ -355,6 +359,11 @@ GrB_Info LAGraph_CFL_reachability
             
         }
     }
+
+    LAGraph_Free((void**) &t_empty_flags, NULL);
+    LAGraph_Free((void**) &eps_rules, NULL);
+    LAGraph_Free((void**) &term_rules, NULL);
+    LAGraph_Free((void**) &bin_rules, NULL);
 
     #ifdef DEBUG_CFL_REACHBILITY
         for (int32_t i = 0; i < nonterms_count; i++) {

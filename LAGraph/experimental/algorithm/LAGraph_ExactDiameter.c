@@ -111,7 +111,8 @@ int LAGraph_ExactDiameter
             nsrcs = n - setStart;
         }
         GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
-        GrB_Index sources[nsrcs];
+        GrB_Index *sources;
+        GRB_TRY (LAGraph_Calloc((void **) &sources, nsrcs, sizeof(GrB_Index), msg)) ;
         for (int64_t i = 0; i < nsrcs; i++){
             GRB_TRY (GrB_Vector_setElement (srcs, setStart+i, i)) ;
             sources[i] = setStart+i;
@@ -128,6 +129,8 @@ int LAGraph_ExactDiameter
         LAGRAPH_TRY (GrB_assign(ecc, NULL, NULL, srcEcc, sources,  nsrcs, GrB_NULL)) ;
         GrB_free (&level) ;
         GrB_free (&srcEcc) ;
+
+        LAGraph_Free((void**) &sources, NULL);
 
         // adjust setStart for next iteration
         setStart = setStart + nsrcs;
