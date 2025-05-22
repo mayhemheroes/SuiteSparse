@@ -150,9 +150,9 @@ GrB_Info LAGraph_CFL_reachability
     GrB_Index *indexes = NULL;
 
     // Arrays for processing rules
-    size_t *eps_rules, eps_rules_count = 0;   // [Variable -> eps]
-    size_t *term_rules, term_rules_count = 0; // [Variable -> term]
-    size_t *bin_rules, bin_rules_count = 0;   // [Variable -> AB]
+    size_t *eps_rules = NULL, eps_rules_count = 0;   // [Variable -> eps]
+    size_t *term_rules = NULL, term_rules_count = 0; // [Variable -> term]
+    size_t *bin_rules = NULL, bin_rules_count = 0;   // [Variable -> AB]
 
     GrB_Scalar true_scalar;
     GrB_Scalar_new(&true_scalar, GrB_BOOL);

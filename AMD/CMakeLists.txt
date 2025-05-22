@@ -12,10 +12,10 @@
 
 cmake_minimum_required ( VERSION 3.22 )
 
-set ( AMD_DATE "June 20, 2024" )
+set ( AMD_DATE "FIXME, 2025" )
 set ( AMD_VERSION_MAJOR 3 CACHE STRING "" FORCE )
 set ( AMD_VERSION_MINOR 3 CACHE STRING "" FORCE )
-set ( AMD_VERSION_SUB   3 CACHE STRING "" FORCE )
+set ( AMD_VERSION_SUB   4 CACHE STRING "" FORCE )
 
 message ( STATUS "Building AMD version: v"
     ${AMD_VERSION_MAJOR}.
@@ -49,10 +49,10 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 if ( NOT SUITESPARSE_ROOT_CMAKELISTS )
-    find_package ( SuiteSparse_config 7.8.0
+    find_package ( SuiteSparse_config 7.11.0
         PATHS ${CMAKE_SOURCE_DIR}/../SuiteSparse_config/build NO_DEFAULT_PATH )
     if ( NOT TARGET SuiteSparse::SuiteSparseConfig )
-        find_package ( SuiteSparse_config 7.8.0 REQUIRED )
+        find_package ( SuiteSparse_config 7.11.0 REQUIRED )
     endif ( )
 endif ( )
 
