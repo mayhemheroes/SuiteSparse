@@ -186,10 +186,8 @@ jobs:
 
       - name: build
         run: |
-          echo "${{ matrix.cc }} --version"
-          ${{ matrix.cc }} --version
-          echo "${{ matrix.cc }} -dumpmachine"
-          ${{ matrix.cc }} -dumpmachine
+          echo "clang --version"
+          clang --version
           IFS=:
           for lib in ${BUILD_LIBS}; do
             printf "   \033[0;32m==>\033[0m Building library \033[0;32m${lib}\033[0m\n"
