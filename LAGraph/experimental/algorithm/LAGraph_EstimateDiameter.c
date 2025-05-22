@@ -216,12 +216,16 @@ int LAGraph_EstimateDiameter
         // choose sources
         GrB_free (&srcs) ;
         GRB_TRY (GrB_Vector_new (&srcs, int_type, nsrcs)) ;
-        GrB_Index sourceIndecies[nperi];
-        int64_t sourceValues[nperi]; // just need this so extractTuples will run
-        GRB_TRY (GrB_Vector_extractTuples(sourceIndecies, sourceValues, &nperi, candidateSrcs)) ;
+        GrB_Index *sourceIndicies;
+        int64_t *sourceValues; // just need this so extractTuples will run
+        GRB_TRY (LAGraph_Calloc((void **) &sourceIndicies, nperi, sizeof(GrB_Index), msg)) ;
+        GRB_TRY (LAGraph_Calloc((void **) &sourceValues, nperi, sizeof(int64_t), msg)) ;
+        GRB_TRY (GrB_Vector_extractTuples(sourceIndicies, sourceValues, &nperi, candidateSrcs)) ;
         for (int64_t j = 0; j < nsrcs; j++) {
-            GRB_TRY (GrB_Vector_setElement (srcs, sourceIndecies[j], j)) ;
+            GRB_TRY (GrB_Vector_setElement (srcs, sourceIndicies[j], j)) ;
         }
+        LAGraph_Free((void**) &sourceIndicies, NULL);
+        LAGraph_Free((void**) &sourceValues, NULL);
         GrB_free(&candidateSrcs) ;
 
 
