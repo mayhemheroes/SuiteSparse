@@ -160,6 +160,7 @@ jobs:
                 ..
 
       - name: build libraries
+        id: build
         run: |
           cd ${GITHUB_WORKSPACE}/build
           cmake --build .
@@ -177,12 +178,14 @@ jobs:
           # FIXME: How to run the demos without Makefile?
 
       - name: ccache status
+        if: always() && (steps.build.outcome != 'skipped')
         continue-on-error: true
         run: ccache -s
 
       - name: save ccache
-        # Save the cache after we are done (successfully) building.
+        # Save the cache after we are done building
         # This helps to retain the ccache even if the subsequent steps are failing.
+        if: always() && (steps.build.outcome != 'skipped')
         uses: actions/cache/save@v4
         with:
           path: ~/.ccache

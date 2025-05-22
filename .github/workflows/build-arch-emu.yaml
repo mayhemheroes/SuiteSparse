@@ -135,6 +135,7 @@ jobs:
             make memcheck
 
       - name: build
+        id: build
         run: |
           echo "gcc --version"
           gcc --version
@@ -177,12 +178,14 @@ jobs:
           done
 
       - name: ccache status
+        if: always() && (steps.build.outcome != 'skipped')
         continue-on-error: true
         run: ccache -s
 
       - name: save ccache
-        # Save the cache after we are done (successfully) building
+        # Save the cache after we are done building
         # This helps to retain the ccache even if the subsequent steps are failing.
+        if: always() && (steps.build.outcome != 'skipped')
         uses: actions/cache/save@v4
         with:
           path: /home/runner/rootfs/alpine-latest-${{ matrix.arch }}/home/runner/.ccache
