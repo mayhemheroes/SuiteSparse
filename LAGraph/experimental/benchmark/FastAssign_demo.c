@@ -56,8 +56,7 @@ int main (int argc, char **argv)
     bool *val_of_P = NULL;
     double t = LAGraph_WallClockTime ( ) ;
     GrB_Index size = (argc > 1) ? atoll(argv [1]) : 1000 ;
-    #if (!( defined ( __NVCC__) || defined ( __INTEL_CLANG_COMPILER) || \
-        defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER ))
+    #ifndef HAVE_BUILTIN_CLZL
     // using the built-in Microsoft Windows compiler
     // use ceil, log2, etc
     int shift_e = 63 - (int) floor (log2 ((double) size)) ;
