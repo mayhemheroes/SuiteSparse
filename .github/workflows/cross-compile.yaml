@@ -40,10 +40,12 @@ jobs:
             ccache-max: 64M
           - arch: ppc64el
             target-triple: powerpc64le-linux-gnu
+            flags: --target=powerpc64le-linux-gnu
             add-libs: libquadmath0:ppc64el
             ccache-max: 64M
           - arch: s390x
             target-triple: s390x-linux-gnu
+            flags: --target=s390x-linux-gnu
             ccache-max: 64M
           - arch: riscv64
             target-triple: riscv64-linux-gnu
@@ -52,10 +54,10 @@ jobs:
     name: cross-compile (${{ matrix.arch }})
 
     env:
-      CC: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && 'clang' || ${{ matrix.target-triple }}-gcc }}
-      CXX: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && 'clang++' || ${{ matrix.target-triple }}-g++ }}
-      CFLAGS: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && --target=${{ matrix.target-triple }} }}
-      CXXFLAGS: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && --target=${{ matrix.target-triple }} }}
+      CC: ${{ matrix.arch == 'armhf' && 'arm-linux-gnueabihf-gcc' || matrix.arch == 'riscv64' && 'riscv64-linux-gnueabihf-gcc' || 'clang' }}
+      CXX: ${{ matrix.arch == 'armhf' && 'arm-linux-gnueabihf-g++' || matrix.arch == 'riscv64' && 'riscv64-linux-gnueabihf-g++' || 'clang++' }}
+      CFLAGS: ${{ matrix.flags }}
+      CXXFLAGS: ${{ matrix.flags }}
       FC: ${{ matrix.target-triple }}-gfortran
       LD_LIBRARY_PATH: "/usr/lib/${{ matrix.target-triple }}"
 
