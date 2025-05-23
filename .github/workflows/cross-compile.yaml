@@ -52,10 +52,10 @@ jobs:
     name: cross-compile (${{ matrix.arch }})
 
     env:
-      CC: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && "clang" || "${{ matrix.target-triple }}-gcc" }}
-      CXX: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && "clang++" || "${{ matrix.target-triple }}-g++" }}
-      CFLAGS: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && "--target=${{ matrix.target-triple }}" }}
-      CXXFLAGS: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && "--target=${{ matrix.target-triple }}" }}
+      CC: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && 'clang' || ${{ matrix.target-triple }}-gcc }}
+      CXX: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && 'clang++' || ${{ matrix.target-triple }}-g++ }}
+      CFLAGS: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && --target=${{ matrix.target-triple }} }}
+      CXXFLAGS: ${{ (matrix.arch == 'ppc64el' || matrix.arch == 's390x') && --target=${{ matrix.target-triple }} }}
       FC: ${{ matrix.target-triple }}-gfortran
       LD_LIBRARY_PATH: "/usr/lib/${{ matrix.target-triple }}"
 
