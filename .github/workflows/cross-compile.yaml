@@ -76,8 +76,7 @@ jobs:
       CFLAGS: "--target=${{ matrix.target-triple }}"
       CXXFLAGS: "--target=${{ matrix.target-triple }}"
       FC: ${{ matrix.target-triple }}-gfortran-14
-      LD_LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
-      LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
+      LD_LIBRARY_PATH: "/usr/lib/${{ matrix.target-triple }}"
 
     steps:
       - name: get CPU information
