@@ -28,10 +28,10 @@ include ( CheckCSourceCompiles )
 check_c_source_compiles ( "
     int main() {
         unsigned long x = 0;
-        __builtin_clzl(x);
+        __builtin_clzll(x);
         return 0;
     }
-" HAVE_BUILTIN_CLZL )
+" HAVE_BUILTIN_CLZLL )
 
 #-------------------------------------------------------------------------------
 # dynamic lagraphx library properties
@@ -61,8 +61,8 @@ if ( BUILD_SHARED_LIBS )
     target_compile_definitions ( LAGraphX PRIVATE LGX_LIBRARY )
     target_compile_definitions ( LAGraphX PUBLIC LGX_DLL )
 
-    if ( HAVE_BUILTIN_CLZL )
-        target_compile_definitions ( LAGraphX PRIVATE HAVE_BUILTIN_CLZL )
+    if ( HAVE_BUILTIN_CLZLL )
+        target_compile_definitions ( LAGraphX PRIVATE HAVE_BUILTIN_CLZLL )
     endif ( )
 endif ( )
 
@@ -98,8 +98,8 @@ if ( BUILD_STATIC_LIBS )
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${SUITESPARSE_INCLUDEDIR}> )
 
-    if ( HAVE_BUILTIN_CLZL )
-        target_compile_definitions ( LAGraphX_static PRIVATE HAVE_BUILTIN_CLZL )
+    if ( HAVE_BUILTIN_CLZLL )
+        target_compile_definitions ( LAGraphX_static PRIVATE HAVE_BUILTIN_CLZLL )
     endif ( )
 endif ( )
 
