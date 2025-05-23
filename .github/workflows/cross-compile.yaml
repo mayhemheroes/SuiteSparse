@@ -33,40 +33,20 @@ jobs:
       fail-fast: false
 
       matrix:
-        arch: [riscv64]
+        arch: [armhf, ppc64el, s390x, riscv64]
         include:
           - arch: armhf
             target-triple: arm-linux-gnueabihf
-            cross-toolchain: g++-14-arm-linux-gnueabihf
-            # fortran-cross-toolchain: gfortran-14-arm-linux-gnueabihf
-            # cc: "arm-linux-gnueabihf-gcc-9"
-            # cxx: "arm-linux-gnueabihf-g++-9"
-            # fc: "arm-linux-gnueabihf-gfortran-14"
             ccache-max: 64M
           - arch: ppc64el
             target-triple: powerpc64le-linux-gnu
-            cross-toolchain: g++-14-powerpc64le-linux-gnu
             add-libs: libquadmath0:ppc64el
-            # fortran-cross-toolchain: gfortran-14-powerpc64le-linux-gnu
-            # cc: "powerpc64le-linux-gnu-gcc-9"
-            # cxx: "powerpc64le-linux-gnu-g++-9"
-            # fc: "powerpc64le-linux-gnu-gfortran-14"
             ccache-max: 64M
           - arch: s390x
             target-triple: s390x-linux-gnu
-            cross-toolchain: g++-14-s390x-linux-gnu
-            # fortran-cross-toolchain: gfortran-14-s390x-linux-gnu
-            # cc: "s390x-linux-gnu-gcc-9"
-            # cxx: "s390x-linux-gnu-g++-9"
-            # fc: "s390x-linux-gnu-gfortran-14"
             ccache-max: 64M
           - arch: riscv64
             target-triple: riscv64-linux-gnu
-            cross-toolchain: g++-14-riscv64-linux-gnu
-            fortran-cross-toolchain: gfortran-14-riscv64-linux-gnu
-            # cc: "riscv64-linux-gnu-gcc-9"
-            # cxx: "riscv64-linux-gnu-g++-9"
-            # fc: "riscv64-linux-gnu-gfortran-14"
             ccache-max: 64M
 
     name: cross-compile (${{ matrix.arch }})
@@ -76,7 +56,7 @@ jobs:
       CXX: clang++
       CFLAGS: "--target=${{ matrix.target-triple }}"
       CXXFLAGS: "--target=${{ matrix.target-triple }}"
-      FC: ${{ matrix.target-triple }}-gfortran-14
+      FC: ${{ matrix.target-triple }}-gfortran
       LD_LIBRARY_PATH: "/usr/lib/${{ matrix.target-triple }}"
 
     steps:
@@ -104,7 +84,7 @@ jobs:
       - name: install cross-toolchain
         run: |
           echo "::group::Install cross-toolchain for ${{ matrix.arch }}"
-          sudo apt -y install clang ${{ matrix.cross-toolchain }} gfortran-14-${{ matrix.target-triple }}
+          sudo apt -y install clang g++-${{ matrix.target-triple }} gfortran-${{ matrix.target-triple }}
           echo "::endgroup::"
 
       - name: configure Multiarch
