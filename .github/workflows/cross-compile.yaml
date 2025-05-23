@@ -171,8 +171,8 @@ jobs:
 
       - name: build
         run: |
-          echo "clang --version"
-          clang --version
+          echo "${CC} --version"
+          ${CC} --version
           IFS=:
           for lib in ${BUILD_LIBS}; do
             printf "   \033[0;32m==>\033[0m Building library \033[0;32m${lib}\033[0m\n"
