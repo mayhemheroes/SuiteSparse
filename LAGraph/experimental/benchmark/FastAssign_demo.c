@@ -56,7 +56,14 @@ int main (int argc, char **argv)
     bool *val_of_P = NULL;
     double t = LAGraph_WallClockTime ( ) ;
     GrB_Index size = (argc > 1) ? atoll(argv [1]) : 1000 ;
+    #if (!( defined ( __NVCC__) || defined ( __INTEL_CLANG_COMPILER) || \
+        defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER ))
+    // using the built-in Microsoft Windows compiler
+    // use ceil, log2, etc
+    int shift_e = 63 - (int) floor (log2 ((double) size)) ;
+    #else
     int shift_e = __builtin_clzl(size);
+    #endif
     GrB_Index size_p2 = (1ull << (64-shift_e));
     GrB_Index bit_mask = size_p2 - 1;
     GRB_TRY (GrB_Vector_new(&rand_v, GrB_UINT64, size)) ;
