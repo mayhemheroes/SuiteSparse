@@ -54,8 +54,8 @@ jobs:
     name: cross-compile (${{ matrix.arch }})
 
     env:
-      CC: ${{ matrix.arch == 'armhf' && 'arm-linux-gnueabihf-gcc' || matrix.arch == 'riscv64' && 'riscv64-linux-gnueabihf-gcc' || 'clang' }}
-      CXX: ${{ matrix.arch == 'armhf' && 'arm-linux-gnueabihf-g++' || matrix.arch == 'riscv64' && 'riscv64-linux-gnueabihf-g++' || 'clang++' }}
+      CC: ${{ matrix.arch == 'armhf' && 'arm-linux-gnueabihf-gcc' || matrix.arch == 'riscv64' && 'riscv64-linux-gnu-gcc' || 'clang' }}
+      CXX: ${{ matrix.arch == 'armhf' && 'arm-linux-gnueabihf-g++' || matrix.arch == 'riscv64' && 'riscv64-linux-gnu-g++' || 'clang++' }}
       CFLAGS: ${{ matrix.flags }}
       CXXFLAGS: ${{ matrix.flags }}
       FC: ${{ matrix.target-triple }}-gfortran
