@@ -73,6 +73,8 @@ jobs:
     env:
       CC: clang
       CXX: clang++
+      CFLAGS: "--target=${{ matrix.target-triple }}"
+      CXXFLAGS: "--target=${{ matrix.target-triple }}"
       FC: ${{ matrix.target-triple }}-gfortran-14
       LD_LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
       LIBRARY_PATH: "/usr/${{ matrix.target-triple }}/lib"
@@ -196,17 +198,9 @@ jobs:
             PKG_CONFIG_PATH=/usr/lib/${{ matrix.target-triple }}/pkgconfig/ \
             cmake -DCMAKE_BUILD_TYPE="Release" \
                   -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}" \
-                  -DCMAKE_C_COMPILER_TARGET=${{ matrix.target-triple }} \
-                  -DCMAKE_CXX_COMPILER_TARGET=${{ matrix.target-triple }} \
-                  -DCMAKE_Fortran_COMPILER_TARGET=${{ matrix.target-triple }} \
                   -DCMAKE_C_COMPILER_LAUNCHER="ccache" \
                   -DCMAKE_CXX_COMPILER_LAUNCHER="ccache" \
                   -DCMAKE_Fortran_COMPILER_LAUNCHER="ccache" \
-                  -DCMAKE_FIND_ROOT_PATH=/usr/${{ matrix.target-triple }} \
-                  -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
-                  -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
-                  -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-                  -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
                   -DBUILD_SHARED_LIBS=ON \
                   -DBUILD_STATIC_LIBS=OFF \
                   -DBLA_VENDOR="Generic" \
