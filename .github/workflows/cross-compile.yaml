@@ -37,7 +37,7 @@ jobs:
         include:
           - arch: armhf
             target-triple: arm-linux-gnueabihf
-            # cross-toolchain: g++-9-arm-linux-gnueabihf
+            cross-toolchain: g++-14-arm-linux-gnueabihf
             # fortran-cross-toolchain: gfortran-14-arm-linux-gnueabihf
             # cc: "arm-linux-gnueabihf-gcc-9"
             # cxx: "arm-linux-gnueabihf-g++-9"
@@ -45,7 +45,7 @@ jobs:
             ccache-max: 64M
           - arch: ppc64el
             target-triple: powerpc64le-linux-gnu
-            # cross-toolchain: g++-9-powerpc64le-linux-gnu 
+            cross-toolchain: g++-14-powerpc64le-linux-gnu
             # fortran-cross-toolchain: gfortran-14-powerpc64le-linux-gnu
             # cc: "powerpc64le-linux-gnu-gcc-9"
             # cxx: "powerpc64le-linux-gnu-g++-9"
@@ -53,7 +53,7 @@ jobs:
             ccache-max: 64M
           - arch: s390x
             target-triple: s390x-linux-gnu
-            # cross-toolchain: g++-9-s390x-linux-gnu 
+            cross-toolchain: g++-14-s390x-linux-gnu
             # fortran-cross-toolchain: gfortran-14-s390x-linux-gnu
             # cc: "s390x-linux-gnu-gcc-9"
             # cxx: "s390x-linux-gnu-g++-9"
