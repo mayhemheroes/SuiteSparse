@@ -151,8 +151,7 @@ jobs:
           echo "::group::Installing dependencies for target arch ${{ matrix.arch }}"
           sudo apt -y install \
             libopenblas-openmp-dev:${{ matrix.arch }} \
-            libmpfr-dev:${{ matrix.arch }} \
-            libomp-dev:${{ matrix.arch }}
+            libmpfr-dev:${{ matrix.arch }}
           echo "::endgroup::"
 
       - name: prepare ccache
