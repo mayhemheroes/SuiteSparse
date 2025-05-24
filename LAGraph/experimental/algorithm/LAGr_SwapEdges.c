@@ -580,13 +580,12 @@ int LAGr_SwapEdges
     
     // Find Hash Size 
     int shift_e ;
-    #if (!( defined ( __NVCC__) || defined ( __INTEL_CLANG_COMPILER) || \
-        defined ( __INTEL_COMPILER) ) && defined ( _MSC_VER ))
+    #ifndef HAVE_BUILTIN_CLZLL
     // using the built-in Microsoft Windows compiler
     // use ceil, log2, etc
     shift_e = 63 - (int) floor (log2 ((double) e)) ;
     #else
-    shift_e = __builtin_clzl(e);
+    shift_e = __builtin_clzll(e);
     #endif
     uint64_t ehash_size = (1ull << (67-shift_e)) ;
     // printf("Hash Size: %ld\n", ehash_size);
