@@ -298,11 +298,11 @@
 
     #if GB_COMPILER_MSC
 
-        #define GB_ATOMIC_CAPTURE_INC32(result,target)                  \
-        {                                                               \
-            ASSERT (sizeof (int32_t) == sizeof (long)) ;                \
-            result = _InterlockedIncrement ((int32_t volatile *) (&(target))) ;\
-            result-- ;                                                  \
+        #define GB_ATOMIC_CAPTURE_INC32(result,target)                      \
+        {                                                                   \
+            ASSERT (sizeof (int32_t) == sizeof (long)) ;                    \
+            result = _InterlockedIncrement ((long volatile *) (&(target))) ;\
+            result-- ;                                                      \
         }
 
     #else
