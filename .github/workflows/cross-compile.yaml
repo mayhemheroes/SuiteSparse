@@ -21,7 +21,7 @@ env:
 jobs:
 
   cross-compile:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.arch == 'armhf' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
 
     defaults:
       run:
@@ -33,13 +33,15 @@ jobs:
       fail-fast: false
 
       matrix:
+        # List of architectures that are supported by Ubuntu:
+        # https://canonical-ubuntu-packaging-guide.readthedocs-hosted.com/en/latest/reference/architectures/
         arch: [armhf, ppc64el, s390x, riscv64]
         include:
           - arch: armhf
             target-triple: arm-linux-gnueabihf
-            ccache-max: 64M
             cc: arm-linux-gnueabihf-gcc
             cxx: arm-linux-gnueabihf-g++
+            ccache-max: 64M
           - arch: ppc64el
             target-triple: powerpc64le-linux-gnu
             flags: --target=powerpc64le-linux-gnu
@@ -50,14 +52,14 @@ jobs:
           - arch: s390x
             target-triple: s390x-linux-gnu
             flags: --target=s390x-linux-gnu
-            ccache-max: 64M
             cc: clang
             cxx: clang++
+            ccache-max: 64M
           - arch: riscv64
             target-triple: riscv64-linux-gnu
-            ccache-max: 64M
             cc: riscv64-linux-gnu-gcc
             cxx: riscv64-linux-gnu-g++
+            ccache-max: 64M
 
     name: cross-compile (${{ matrix.arch }})
 
@@ -102,36 +104,58 @@ jobs:
         run: |
           sudo dpkg --add-architecture ${{ matrix.arch }}
           UBUNTU_CODENAME=$(cat /etc/os-release | grep ^UBUNTU_CODENAME | cut -d= -f2)
-          sudo bash -c 'cat - >/etc/apt/sources.list.d/ubuntu.sources' <<-EOF
-          	Types: deb
-          	URIs: http://archive.ubuntu.com/ubuntu/
-          	Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
-          	Components: main restricted universe multiverse
-          	Architectures: amd64
-          	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-          	
-          	Types: deb
-          	URIs: http://security.ubuntu.com/ubuntu/
-          	Suites: $UBUNTU_CODENAME-security
-          	Components: main restricted universe multiverse
-          	Architectures: amd64
-          	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-          	
-          	Types: deb
-          	URIs: http://ports.ubuntu.com/ubuntu-ports/
-          	Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
-          	Components: main restricted universe multiverse
-          	Architectures: ${{ matrix.arch }}
-          	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-          	
-          	Types: deb
-          	URIs: http://security.ports.ubuntu.com/ubuntu-ports/
-          	Suites: $UBUNTU_CODENAME-security
-          	Components: main restricted universe multiverse
-          	Architectures: ${{ matrix.arch }}
-          	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-          	
-          	EOF
+          case ${{ matrix.arch }} in
+            "armhf")
+              sudo bash -c 'cat - >/etc/apt/sources.list.d/ubuntu.sources' <<EOF
+          Types: deb
+          URIs: http://ports.ubuntu.com/ubuntu-ports/
+          Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
+          Components: main restricted universe multiverse
+          Architectures: arm64 ${{ matrix.arch }}
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          
+          Types: deb
+          URIs: http://security.ports.ubuntu.com/ubuntu-ports/
+          Suites: $UBUNTU_CODENAME-security
+          Components: main restricted universe multiverse
+          Architectures: arm64 ${{ matrix.arch }}
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          
+          EOF
+              ;;
+                  *)
+              sudo bash -c 'cat - >/etc/apt/sources.list.d/ubuntu.sources' <<EOF
+          Types: deb
+          URIs: http://archive.ubuntu.com/ubuntu/
+          Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
+          Components: main restricted universe multiverse
+          Architectures: amd64
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          
+          Types: deb
+          URIs: http://security.ubuntu.com/ubuntu/
+          Suites: $UBUNTU_CODENAME-security
+          Components: main restricted universe multiverse
+          Architectures: amd64
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          
+          Types: deb
+          URIs: http://ports.ubuntu.com/ubuntu-ports/
+          Suites: $UBUNTU_CODENAME $UBUNTU_CODENAME-updates $UBUNTU_CODENAME-backports
+          Components: main restricted universe multiverse
+          Architectures: ${{ matrix.arch }}
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          
+          Types: deb
+          URIs: http://security.ports.ubuntu.com/ubuntu-ports/
+          Suites: $UBUNTU_CODENAME-security
+          Components: main restricted universe multiverse
+          Architectures: ${{ matrix.arch }}
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          
+          EOF
+              ;;
+          esac
           echo "::group::Updating package indexes with new indexes for ${{ matrix.arch }} packages"
           sudo apt update
           echo "::endgroup::"
