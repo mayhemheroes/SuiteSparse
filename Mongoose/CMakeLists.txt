@@ -35,8 +35,8 @@
 
 cmake_minimum_required ( VERSION 3.22 )
 
-set ( Mongoose_DATE "FIXME, 2025" )
-set ( Mongoose_NUMERIC_DATE "2025-06-01" )  # FIXME
+set ( Mongoose_DATE "June 1, 2025" )
+set ( Mongoose_NUMERIC_DATE "2025-06-01" )
 set ( Mongoose_VERSION_MAJOR 3 CACHE STRING "" FORCE )
 set ( Mongoose_VERSION_MINOR 3 CACHE STRING "" FORCE )
 set ( Mongoose_VERSION_PATCH 5 CACHE STRING "" FORCE )
@@ -379,7 +379,7 @@ if ( BUILD_TESTING )
     endif ( )
     target_link_libraries ( mongoose_test_reference PRIVATE SuiteSparse::SuiteSparseConfig )
     set_target_properties ( mongoose_test_reference PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTING_OUTPUT_PATH} )
-    # FIXME: Is there a test that is using this executable?
+    # Fixme: Is there a test that is using this executable?
 
     # Unit Tests
     add_executable ( mongoose_unit_test_io

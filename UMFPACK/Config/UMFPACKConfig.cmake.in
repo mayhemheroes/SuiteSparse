@@ -84,7 +84,7 @@ else ( )
     endif ( )
 endif ( )
 
-# FIXME: Also check for BLAS libraries here?
+# Fixme: Also check for BLAS libraries here?
 
 if ( NOT SuiteSparse_config_FOUND OR NOT AMD_FOUND 
      OR ( @UMFPACK_HAS_CHOLMOD@ AND NOT CHOLMOD_FOUND ) )

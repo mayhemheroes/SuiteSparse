@@ -13,7 +13,7 @@
 # cmake 3.22 is required to find the BLAS in SuiteSparse_config
 cmake_minimum_required ( VERSION 3.22 )
 
-set ( PARU_DATE "FIXME, 2025" )
+set ( PARU_DATE "June 1, 2025" )
 set ( PARU_VERSION_MAJOR  1 CACHE STRING "" FORCE )
 set ( PARU_VERSION_MINOR  0 CACHE STRING "" FORCE )
 set ( PARU_VERSION_UPDATE 1 CACHE STRING "" FORCE )

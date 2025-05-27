@@ -12,7 +12,7 @@
 # cmake 3.22 is required to find the BLAS/LAPACK
 cmake_minimum_required ( VERSION 3.22 )
 
-set ( CHOLMOD_DATE "FIXME, 2025" )
+set ( CHOLMOD_DATE "June 1, 2025" )
 set ( CHOLMOD_VERSION_MAJOR 5 CACHE STRING "" FORCE )
 set ( CHOLMOD_VERSION_MINOR 3 CACHE STRING "" FORCE )
 set ( CHOLMOD_VERSION_SUB   4 CACHE STRING "" FORCE )
@@ -597,7 +597,7 @@ if ( CHOLMOD_HAS_CUDA )
     endif ( )
     if ( BUILD_STATIC_LIBS )
         target_link_libraries ( CHOLMOD_static PRIVATE CUDA::nvrtc CUDA::cudart_static )
-        # FIXME: Ok to hardcode CUDA library names like this?
+        # Fixme: Ok to hardcode CUDA library names like this?
         list ( APPEND CHOLMOD_STATIC_LIBS "-L${CUDAToolkit_LIBRARY_DIR};-lcuda;-lcudart_static" )
         if ( TARGET CUDA::cublas_static )
             target_link_libraries ( CHOLMOD_static PRIVATE CUDA::cublas_static )

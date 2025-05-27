@@ -11,7 +11,7 @@
 
 cmake_minimum_required ( VERSION 3.22 )
 
-set ( CXSPARSE_DATE "FIXME, 2025" )
+set ( CXSPARSE_DATE "June 1, 2025" )
 set ( CXSPARSE_VERSION_MAJOR 4 CACHE STRING "" FORCE )
 set ( CXSPARSE_VERSION_MINOR 4 CACHE STRING "" FORCE )
 set ( CXSPARSE_VERSION_SUB   2 CACHE STRING "" FORCE )
@@ -43,7 +43,7 @@ include ( SuiteSparsePolicy )
 #-------------------------------------------------------------------------------
 
 # MS Visual Studio does not support the complex type for ANSI C11.
-# FIXME: see GraphBLAS for how to use complex types in MS Visual Studio.
+# Fixme: see GraphBLAS for how to use complex types in MS Visual Studio.
 
 if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
     option ( CXSPARSE_USE_COMPLEX "ON: complex data type enabled.  OFF (default): complex data type disabled." OFF )

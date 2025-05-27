@@ -1,4 +1,4 @@
-FIXME 2025: version 7.11.0
+June 1, 2025: version 7.11.0
 
     * LAGraph v1.2: many new experimental algorithms, LAGraph_Random in src/
     * GraphBLAS v10.1.0: risc-V vectorization, GRAPHBLAS_VANILLA (optional;
