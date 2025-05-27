@@ -4,7 +4,7 @@ June 1, 2025: version 7.11.0
     * GraphBLAS v10.1.0: risc-V vectorization, GRAPHBLAS_VANILLA (optional;
         to disable GxB extensions), and cmake revisions to ensure gcc is not
         used to compile GraphBLAS on the Power or s390 processors (as a
-        workaround around a bug in the gcc compiler).
+        workaround around for a bug in the gcc compiler).
     * nearly all packages: cmake updates, to move static targets into separate
         exports (needed for Fedora packaging)
     * Package versions in this release: (* denotes a new version)
