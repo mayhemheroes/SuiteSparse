@@ -1,3 +1,11 @@
+[![arch-emu](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/build-arch-emu.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/build-arch-emu.yaml)
+[![build](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/build.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/build.yaml)
+[![build-mingw](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/build-mingw.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/build-mingw.yaml)
+[![cross-compile](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/cross-compile.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/cross-compile.yaml)
+[![macos](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/macos.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/macos.yaml)
+[![root-cmakelists](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/root-cmakelists.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/root-cmakelists.yaml)
+[![root-cmakelists-msvc](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/root-cmakelists-msvc.yaml/badge.svg)](https://github.com/DrTimothyAldenDavis/SuiteSparse/actions/workflows/root-cmakelists-msvc.yaml)
+
 -----------------------------------------------------------------------------
 SuiteSparse:  A Suite of Sparse matrix packages at http://suitesparse.com
 -----------------------------------------------------------------------------
