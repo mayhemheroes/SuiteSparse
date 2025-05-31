@@ -21,7 +21,7 @@ Code co-authors, in alphabetical order (not including METIS or LAGraph):
     Patrick Amestoy, Mohsen Aznaveh, David Bateman, Jinhao Chen, Yanqing Chen,
     Iain Duff, Joe Eaton, Les Foster, William Hager, Raye Kimmerer, Scott
     Kolodziej, Chris Lourenco, Stefan Larimore, Lorena Mejia Domenzain, Erick
-    Moreno-Centeno, Markus Mützel, Corey Nolel, Ekanathan Palamadai,
+    Moreno-Centeno, Markus Mützel, Corey Nolet, Ekanathan Palamadai,
     Sivasankaran Rajamanickam, Sanjay Ranka, Wissam Sid-Lakhdar, and
     Nuri Yeralan.
 
