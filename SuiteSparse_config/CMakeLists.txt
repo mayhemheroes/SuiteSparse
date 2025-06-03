@@ -395,3 +395,4 @@ endif ( )
 #-------------------------------------------------------------------------------
 
 include ( SuiteSparseReport )
+message ( STATUS "CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}" )
