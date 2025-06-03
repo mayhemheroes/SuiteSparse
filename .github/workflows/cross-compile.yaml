@@ -51,9 +51,11 @@ jobs:
             ccache-max: 64M
           - arch: s390x
             target-triple: s390x-linux-gnu
-            flags: --target=s390x-linux-gnu
-            cc: clang
-            cxx: clang++
+            # flags: --target=s390x-linux-gnu
+            # cc: clang
+            # cxx: clang++
+            cc: s390x-linux-gnu-gcc
+            cxx: s390x-linux-gnu-g++
             ccache-max: 64M
           - arch: riscv64
             target-triple: riscv64-linux-gnu
