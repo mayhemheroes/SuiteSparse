@@ -54,6 +54,7 @@ jobs:
             # flags: --target=s390x-linux-gnu
             # cc: clang
             # cxx: clang++
+            flags: -DGCC_PPC_BUG
             cc: s390x-linux-gnu-gcc
             cxx: s390x-linux-gnu-g++
             ccache-max: 64M
