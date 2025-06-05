@@ -223,8 +223,7 @@ GrB_Info GB (_Asaxpy4B)
     const bool use_atomics,
     const int64_t *A_slice,
     const int64_t *H_slice,
-    GB_void *restrict Wcx,
-    int8_t *restrict Wf
+    GB_void *restrict Wcx
 )
 { 
     #if GB_DISABLE
@@ -311,6 +310,30 @@ m4_divert(if_semiring_has_avx)
             }
 
         #endif
+
+        //----------------------------------------------------------------------
+        // saxpy5 method with RISC-V vectors
+        //----------------------------------------------------------------------
+
+        #if GB_COMPILER_SUPPORTS_RVV1
+
+            #include <riscv_vector.h>
+
+            GB_TARGET_RVV1 static inline void GB_AxB_saxpy5_unrolled_rvv
+            (
+                GrB_Matrix C,
+                const GrB_Matrix A,
+                const GrB_Matrix B,
+                const int ntasks,
+                const int nthreads,
+                const int64_t *B_slice
+            )
+            {
+                #include "mxm/template/GB_AxB_saxpy5_lv.c"
+            }
+
+        #endif
+
 m4_divert(if_saxpy5_enabled)
 
         //----------------------------------------------------------------------

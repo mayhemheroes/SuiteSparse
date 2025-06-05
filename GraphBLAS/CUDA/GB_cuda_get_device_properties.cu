@@ -11,21 +11,25 @@
 #include "GB_cuda.hpp"
 #define CU_OK(cudaMethod)                               \
 {                                                       \
-    if ((cudaMethod) != cudaSuccess) return (false) ;   \
+    if ((cudaMethod) != cudaSuccess)                    \
+    {                                                   \
+        printf ("cuda failed, file: %s, line: %d\n", __FILE__, __LINE__) ; \
+        return (false) ;   \
+    }   \
 }
 
 //------------------------------------------------------------------------------
 // GB_cuda_get_device: get the current GPU
 //------------------------------------------------------------------------------
 
-bool GB_cuda_get_device (int &device)
+bool GB_cuda_get_device (int *device)
 {
-    if (&device == NULL)
+    if (device == NULL)
     {
         // invalid inputs
         return (false) ;
     }
-    CU_OK (cudaGetDevice (&device)) ;
+    CU_OK (cudaGetDevice (device)) ;
     return (true) ;
 }
 

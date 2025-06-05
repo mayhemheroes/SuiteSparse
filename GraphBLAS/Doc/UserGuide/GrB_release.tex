@@ -5,6 +5,78 @@
 
 \begin{itemize}
 
+\item June 2, 2025: version 10.1.1
+
+    \begin{itemize}
+    \item gcc can now be used the Power or s390:  workaround added;
+        see \verb'Source/mxm/factory/GB_AxB_saxpy3_symbolic_fine_template.c.'
+	This resolves the issue found in v10.1.0.
+    \end{itemize}
+
+\item June 1, 2025: version 10.1.0
+
+    \begin{itemize}
+    \item add support for RISC-V vectorization: contributed by Rodion Suvorov
+    \item added \verb'GRAPHBLAS_VANILLA': compile-time flag that disables all
+        GxB methods.
+    \item gcc and the Power or s390 processors:  using gcc on the Power or s390
+        processors leads to a failure in the OpenMP atomic capture intrinsic.
+        See \verb'Source/mxm/factory/GB_AxB_saxpy3_symbolic_template.c.'  The
+        cmake build system has been revised so that it refuses to use gcc on
+        these systems system.  Use clang or the IBM xlc compiler instead, which
+        do not trigger this error.
+    \item \verb'GxB_STDC_VERSION': this is normally equal to
+        \verb'__STDC_VERSION__' and is determined automatically in GraphBLAS.h.
+        If it is $\ge$ 201112L, then C11 is being used and the polymorphic
+        functions (based on \verb'_Generic') are available.  It can now be
+        \verb'#define'd by the user application prior to its
+        \verb'#include "GraphBLAS.h"' statement.  If a C++ compiler is used to
+        compile the user application then \verb'GxB_STDC_VERSION' is set to
+        199001L to denote C90 (and no \verb'_Generic' keyword is used).
+
+        See \verb'GraphBLAS/Demo/Include/graphblas_demo.h' for an example usage.
+    \item minor updates to build system
+    \item iterator methods: revised so they do not conflict with the copy of
+        GraphBLAS v7.4.4 used inside MATLAB R2024b.  No effect on normal
+        C API, so no change in major SO number for this release.
+    \end{itemize}
+
+\item May 5, 2025: version 10.0.5
+
+    \begin{itemize}
+    \item revised cmake build system
+    \item (64) bug fix: \verb'GrB_assign', \verb'C<M>+=A',
+        method 08n, when A is full.  Caught by Gabe Gomez.
+    \item (63) bug fix: \verb'GrB_mxm' when using the masked dot-product
+        and the output matrix is iso-valued.
+    \end{itemize}
+
+\item Apr 7, 2025: version 10.0.3
+
+    \begin{itemize}
+    \item upgrade \verb'xxHash' to 0.8.3: contributed by Christoph Gr\"uninger.
+    \item upgrade \verb'cpu_features' to 0.9.0: contributed by Christoph
+        Gr\"uninger.
+    \item Octave interface: revised for the recent MacOS (15.3.2), assuming
+        that both Octave and OpenMP are installed via homebrew.
+    \end{itemize}
+
+\item Mar 20, 2025: version 10.0.2
+
+    \begin{itemize}
+    \item performance:  improved the performance of \verb'GrB_setElement'
+        when many entries are inserted into a matrix that is initially empty.
+    \item (61) bug fix: \verb'GxB_Serialized_get_Scalar' declared twice in
+        \verb'GraphBLAS.h'; caught by Erik Welch.
+    \end{itemize}
+
+\item Mar 6, 2025: version 10.0.1
+
+    \begin{itemize}
+    \item (60) bug fix: one of the \verb'GrB_mxm' kernels (saxpy4) can hit a
+    segfault for user-defined types, in the JIT kernels.  Caught by Gabe Gomez.
+    \end{itemize}
+
 \item Mar 1, 2025: version 10.0.0
 
     \begin{itemize}
