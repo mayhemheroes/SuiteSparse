@@ -902,6 +902,8 @@ build type).  The static libraries will not be built (since
   `suitesparse_config;mongoose;amd;btf;camd;ccolamd;colamd;cholmod;cxsparse;ldl;klu;umfpack;paru;rbio;spqr;spex;graphblas;lagraph`
 
   Additionally, `csparse` can be included in that list to build CSparse.
+  If you place this string in a cmake command inside another cmake script,
+  you will likely need to replace the literal semicolon with `$<SEMICOLON>`.
 
 * `CMAKE_BUILD_TYPE`:
 
