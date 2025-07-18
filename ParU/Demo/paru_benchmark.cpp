@@ -138,13 +138,16 @@ int main(int argc, char **argv)
     std::cout << "OpenMP in ParU: " << (using_openmp ? "yes" : "no" )
         << std::endl ;
 
-    int64_t max_nthreads ;
+    int64_t max_nthreads, max_levels ;
     #ifdef _OPENMP
     max_nthreads = omp_get_max_threads ( ) ;
+    max_levels   = omp_get_max_active_levels ( ) ;
     #else
     max_ntreads = 1 ;
+    max_levels  = 1 ;
     #endif
     std::cout << "max # threads: " << max_nthreads << std::endl ;
+    std::cout << "max # levels:  " << max_levels   << std::endl ;
 
     // allocate workspace
     int64_t n, anz ;
@@ -160,6 +163,8 @@ int main(int argc, char **argv)
     #define NTRIALS 5
     int middle = NTRIALS / 2 ;
 
+if (1)  // enable ParU
+{
     for (int ord = 0 ; ord <= 1 ; ord++)
     {
         int ordering = (ord == 0) ? PARU_ORDERING_AMD :
@@ -329,6 +334,7 @@ int main(int argc, char **argv)
                 << std::endl << std::endl ;
         }
     }
+}
 
     //~~~~~~~~~~~~~~~~~~~End computation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
