@@ -170,11 +170,12 @@ int main(int argc, char **argv)
     #define NTRIALS 5
     int middle = NTRIALS / 2 ;
 
-
     //--------------------------------------------------------------------------
     // benchmark UMFPACK
     //--------------------------------------------------------------------------
 
+if (0)
+{
     double umf_time = 0;
     double status,           // Info [UMFPACK_STATUS]
         Info[UMFPACK_INFO],  // Contains statistics about the symbolic analysis
@@ -281,6 +282,11 @@ int main(int argc, char **argv)
         }
     }
 
+    #ifdef _OPENMP
+    omp_set_num_threads (max_nthreads) ;
+    // BLAS_set_num_threads (nthreads) ;
+    #endif
+}
     //--------------------------------------------------------------------------
     // benchmark ParU
     //--------------------------------------------------------------------------
