@@ -73,10 +73,17 @@ int main(int argc, char **argv)
     int mtype;
     cholmod_l_start(cc);
 
+    char *filename = NULL ;
     if (argc > 1)
     {
+        filename = argv [1] ;
         std::cout << "Matrix: " << argv [1] << std::endl ;
         fp = fopen (argv [1], "r") ;
+        // look for the last slash in filename:
+        for (char *p = filename ; *p != '\0' ; p++)
+        {
+            if (*p == '/') filename = p+1 ;
+        }
     }
     else
     {
@@ -301,7 +308,8 @@ if (1)
 
         printf ("UMFPACK strategy used: %d\n", (int) Info [UMFPACK_STRATEGY_USED]) ;
         printf ("UMFPACK ordering used: %d\n", (int) Info [UMFPACK_ORDERING_USED]) ;
-        printf ("TABLE,  UMF, %d, %d, %d, sym_time:, %12.6e, num_times:, ",
+        printf ("TABLE,  UMF, %s, %d, %d, %d, sym_time:, %12.6e, num_times:, ",
+            (filename == NULL) ? " " : filename,
             (int) Info [UMFPACK_STRATEGY_USED], (int) Info [UMFPACK_STRATEGY_USED],
             (int) Info [UMFPACK_ORDERING_USED], sym_time) ;
         for (int kk = 0 ; kk < 19 ; kk++)
@@ -436,6 +444,7 @@ if (1)
                 double rresid = (anorm == 0 || xnorm == 0 ) ? 0 :
                     (resid/(anorm*xnorm));
 
+                #if 0
                 for (int64_t i = 0; i < n; ++i)
                 {
                     for (int64_t j = 0; j < nrhs; ++j)
@@ -462,22 +471,28 @@ if (1)
                 }
                 double rresid2 = (anorm == 0 || xnorm == 0 ) ? 0 :
                     (resid/(anorm*xnorm));
+                #endif
 
                 if (trial == 0)
                 {
                     std::cout << std::scientific << std::setprecision(6)
                         << "Relative residual: " << rresid << " rcond: "
                         << rcond << std::endl;
+                    #if 0
                     std::cout << std::scientific << std::setprecision(6)
                         << "Multiple right hand side: relative residual is |"
                         << rresid2 << "|." << std::endl;
+                    #endif
                 }
 
                 std::cout << std::scientific << std::setprecision(6)
                     << "ParU: time: sym: " << my_time_analyze
                     << " num: " << my_time_fac
                     << " solve (1 rhs): " << my_solve_time
-                    << " solve (16 rhs): " << my_solve_time2 << std::endl ;
+                    #if 0
+                    << " solve (16 rhs): " << my_solve_time2
+                    #endif
+                    << std::endl ;
 
                 ParU_sym_times [trial] = my_time_analyze ;
                 ParU_num_times [trial] = my_time_fac ;
@@ -510,7 +525,8 @@ if (1)
         printf ("UMF  strategy used: %d\n", umf_strategy_used) ;
         printf ("ParU strategy used: %d\n", strategy_used) ;
         printf ("ParU ordering used: %d\n", ordering_used) ;
-        printf ("TABLE, ParU, %d, %d, %d, sym_time:, %12.6e, num_times:, ",
+        printf ("TABLE, ParU, %s, %d, %d, %d, sym_time:, %12.6e, num_times:, ",
+            (filename == NULL) ? " " : filename,
             umf_strategy_used, strategy_used, ordering_used, sym_time) ;
         for (int kk = 0 ; kk < 19 ; kk++)
         {
