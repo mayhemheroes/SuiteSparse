@@ -218,7 +218,7 @@ if (1)
             printf ("# threads: %d\n", nthreads) ;
             #ifdef _OPENMP
             omp_set_num_threads (nthreads) ;
-            // BLAS_set_num_threads (nthreads) ;
+            BLAS_set_num_threads (nthreads) ;
             #endif
 
             double UMF_sym_times [NTRIALS] ;
@@ -323,14 +323,16 @@ if (1)
             if (sol_times [kk] < 0) break ;
             printf (" %12.6e, ", sol_times [kk]) ;
         }
+        printf ("\n") ;
 
     }
 
     #ifdef _OPENMP
     omp_set_num_threads (max_nthreads) ;
-    // BLAS_set_num_threads (nthreads) ;
+    BLAS_set_num_threads (max_nthreads) ;
     #endif
 }
+
     //--------------------------------------------------------------------------
     // benchmark ParU
     //--------------------------------------------------------------------------
@@ -539,6 +541,7 @@ if (1)
             if (sol_times [kk] < 0) break ;
             printf (" %12.6e, ", sol_times [kk]) ;
         }
+        printf ("\n") ;
     }
 
     //--------------------------------------------------------------------------
