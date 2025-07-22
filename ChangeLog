@@ -6,8 +6,8 @@ July 25, 2025: version 7.11.0
         Power and s390x processors.
     * nearly all packages: cmake updates, to move static targets into separate
         exports (needed for Fedora packaging)
-    * all packages:  Fortran now disabled by default, with the default setting
-        of SUITESPARSE_USE_FORTRAN changes from ON to OFF.  If the icx compiler
+    * all packages:  Fortran is now disabled by default, with the default setting
+        of SUITESPARSE_USE_FORTRAN changed from ON to OFF.  If the icx compiler
         and the Intel MKL BLAS are available but ifx is not, then loading the
         GNU Fortran compiler causes the cmake FindBLAS to link the Intel MKL
         against libgomp, but at the same time cmake links the application with
