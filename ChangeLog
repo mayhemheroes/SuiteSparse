@@ -10,9 +10,10 @@ July 25, 2025: version 7.11.0
         of SUITESPARSE_USE_FORTRAN changed from ON to OFF.  If the icx compiler
         and the Intel MKL BLAS are available but ifx is not, then loading the
         GNU Fortran compiler causes the cmake FindBLAS to link the Intel MKL
-        against libgomp, but at the same time cmake links the application with
-        libiomp.  Including two OpenMP libraries, libiomp and libgomp, in one
-        application can cause serious performance issues.  To avoid this issue,
+        against libgomp, but at the same time cmake links SuiteSparse libraries
+        with libiomp (the UMFPACK, CHOLMOD, SPQR, and ParU lib*.so's).
+        Including two OpenMP libraries, libiomp and libgomp, in one application
+        can cause serious performance issues.  To avoid this issue,
         SUITESPARSE_USE_FORTRAN has been set to OFF.  This has little impact on
         SuiteSparse (it disables the AMD Fortran routines, and removes the
         Fortran interface to UMFPACK).  If you wish to use those features,
