@@ -320,9 +320,17 @@ if ( SUITESPARSE_USE_FORTRAN )
             message ( STATUS "    C       id:       ${CMAKE_C_COMPILER_ID}" )
             message ( STATUS "    C++               ${CMAKE_CXX_COMPILER}" )
             message ( STATUS "    C++     id:       ${CMAKE_CXX_COMPILER_ID}" )
-            message ( FATAL_ERROR "Error: Using Fortran with SuiteSparse requires that "
-            " it has the same compiler ID as the C/C++ compilers."
-            "  Use a compatible Fortran compiler, or set SUITESPARSE_USE_FORTRAN to OFF." )
+            if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "IntelLLVM" )
+                # icx/icpx cannot be used with gfortran: this is a fatal error
+                message ( FATAL_ERROR "ERROR: Using Fortran with SuiteSparse requires that "
+                " it has the same compiler ID as the C/C++ compilers."
+                "  Use a compatible Fortran compiler, or set SUITESPARSE_USE_FORTRAN to OFF." )
+            else ( )
+                # for other case: just issue a warning and hope it works.
+                message ( WARNING "Warning: Using Fortran with SuiteSparse requires that "
+                " it has the same compiler ID as the C/C++ compilers."
+                "  Use a compatible Fortran compiler, or set SUITESPARSE_USE_FORTRAN to OFF." )
+            endif ( )
         endif ( )
         message ( STATUS "Fortran:          enabled" )
     else ( )
