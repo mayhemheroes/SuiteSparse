@@ -70,18 +70,22 @@
 #                       This will require SUITESPARSE_C_TO_FORTRAN to be
 #                       defined explicitly, if the defaults are not appropriate
 #                       for your system.
-#                       Default: ON
+#                       Default: OFF
 #
-#       *** WARNING:  Using the Intel icx compiler, the Intel MKL BLAS, and the
-#       GNU Fortran compiler together will result in two OpenMP libraries
-#       linked to the UMFPACK, CHOLMOD, ParU, and SPQR libraries.  This will
-#       cause serious performance issues.  This cmake file detects if icx and
-#       gfortran are in use, and issues a fatal error.  Otherwise, if the C,
-#       C++, and Fortran compilers have a different compiler ID, a warning is
-#       issued; this is NOT recommended, but it might be OK.  In that case,
-#       ensure that you are linking with just one OpenMP library.  If this
-#       occurs, disable the use of Fortran by setting SUITESPARSE_USE_FORTRAN
-#       to OFF, or use a suite of C/C++/Fortran compilers with the same ID.
+#       This setting was ON by default in SuiteSparse 7.10.0 and earlier.
+#       Note that Fortran is now disabled by default, with the default setting
+#       of SUITESPARSE_USE_FORTRAN changed from ON to OFF.  If the icx compiler
+#       and the Intel MKL BLAS are available but ifx is not, then loading the
+#       GNU Fortran compiler causes the cmake FindBLAS to link the Intel MKL
+#       against libgomp, but at the same time cmake links the application with
+#       libiomp.  Including two OpenMP libraries, libiomp and libgomp, in one
+#       application can cause serious performance issues.  To avoid this issue,
+#       SUITESPARSE_USE_FORTRAN has been set to OFF.  This has little impact on
+#       SuiteSparse (it disables the AMD Fortran routines, and removes the
+#       Fortran interface to UMFPACK).  If you wish to use those features,
+#       re-enable the SUITESPARSE_USE_FORTRAN, but be sure to use either gcc
+#       and gfortran together, or icx and ifx together.  Do not mix-and-match
+#       the compilers.
 #
 #   SUITESPARSE_PKGFILEDIR: Directory where CMake Config and pkg-config files
 #                       will be installed.  By default, CMake Config files will
@@ -293,43 +297,6 @@ if ( APPLE AND CMAKE_SYSTEM_VERSION VERSION_LESS 11 )
 endif ( )
 
 #-------------------------------------------------------------------------------
-# find OpenMP
-#-------------------------------------------------------------------------------
-
-# This must be done before loading Fortran and the BLAS
-
-if ( SUITESPARSE_USE_OPENMP )
-    enable_language ( C )
-    enable_language ( CXX )
-    if ( CMAKE_VERSION VERSION_LESS 3.24 )
-        find_package ( OpenMP COMPONENTS C CXX )
-    else ( )
-        find_package ( OpenMP COMPONENTS C CXX GLOBAL )
-    endif ( )
-    message ( STATUS "OpenMP C libraries:   ${OpenMP_C_LIBRARIES} " )
-    message ( STATUS "OpenMP C++ libraries: ${OpenMP_CXX_LIBRARIES} " )
-    if ( "${OpenMP_C_LIBRARIES}" MATCHES "libgomp" )
-        # ensure the MKL also uses the GNU OpenMP
-        message ( STATUS "Using GNU OpenMP" )
-        set ( MKL_THREADING "gnu_thread" )
-    elseif ( "${OpenMP_C_LIBRARIES}" MATCHES "libiomp" )
-        # ensure the MKL also uses the Intel OpenMP
-        message ( STATUS "Using Intel OpenMP" )
-        set ( MKL_THREADING "intel_thread" )
-    elseif ( "${OpenMP_C_LIBRARIES}" MATCHES "libomp" )
-        message ( STATUS "Using Clang OpenMP" )
-    else ( )
-        message ( STATUS "Using other OpenMP" )
-    endif ( )
-    message ( STATUS "MKL threading: ${MKL_THREADING}" )
-    find_package ( MKL CONFIG )
-else ( )
-    # OpenMP has been disabled
-    set ( OpenMP_C_FOUND OFF )
-    set ( OpenMP_CXX_FOUND OFF )
-endif ( )
-
-#-------------------------------------------------------------------------------
 # check if Fortran is available and enabled
 #-------------------------------------------------------------------------------
 
@@ -340,7 +307,6 @@ if ( SUITESPARSE_USE_FORTRAN )
     check_language ( Fortran )
     if ( CMAKE_Fortran_COMPILER )
         # Fortran is available; ensure that it is compatible with C/C++
-        enable_language ( C )
         enable_language ( CXX )
         enable_language ( Fortran )
         set ( SUITESPARSE_HAS_FORTRAN ON )
@@ -354,17 +320,17 @@ if ( SUITESPARSE_USE_FORTRAN )
             message ( STATUS "    C       id:       ${CMAKE_C_COMPILER_ID}" )
             message ( STATUS "    C++               ${CMAKE_CXX_COMPILER}" )
             message ( STATUS "    C++     id:       ${CMAKE_CXX_COMPILER_ID}" )
-#           if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "IntelLLVM" )
-#               # icx/icpx cannot be used with gfortran: this is a fatal error
-#               message ( FATAL_ERROR "ERROR: Using Fortran with SuiteSparse requires that "
-#               " it has the same compiler ID as the C/C++ compilers."
-#               "  Use a compatible Fortran compiler, or set SUITESPARSE_USE_FORTRAN to OFF." )
-#           else ( )
+            if ( "${CMAKE_C_COMPILER_ID}" STREQUAL "IntelLLVM" )
+                # icx/icpx cannot be used with gfortran: this is a fatal error
+                message ( FATAL_ERROR "ERROR: Using Fortran with SuiteSparse requires that "
+                " it has the same compiler ID as the C/C++ compilers."
+                "  Use a compatible Fortran compiler, or set SUITESPARSE_USE_FORTRAN to OFF." )
+            else ( )
                 # for other case: just issue a warning and hope it works.
                 message ( WARNING "Warning: Using Fortran with SuiteSparse requires that "
                 " it has the same compiler ID as the C/C++ compilers."
                 "  Use a compatible Fortran compiler, or set SUITESPARSE_USE_FORTRAN to OFF." )
-#           endif ( )
+            endif ( )
         endif ( )
         message ( STATUS "Fortran:          enabled" )
     else ( )

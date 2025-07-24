@@ -45,7 +45,28 @@ set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 
 include ( SuiteSparsePolicy )
 
+#-------------------------------------------------------------------------------
+# find OpenMP
+#-------------------------------------------------------------------------------
+
 option ( SUITESPARSE_CONFIG_USE_OPENMP "ON: Use OpenMP in SuiteSparse_config if available.  OFF: Do not use OpenMP.  (Default: SUITESPARSE_USE_OPENMP)" ${SUITESPARSE_USE_OPENMP} )
+if ( SUITESPARSE_CONFIG_USE_OPENMP )
+    if ( CMAKE_VERSION VERSION_LESS 3.24 )
+        find_package ( OpenMP COMPONENTS C )
+    else ( )
+        find_package ( OpenMP COMPONENTS C GLOBAL )
+    endif ( )
+    message ( STATUS "OpenMP C libraries: ${OpenMP_C_LIBRARIES} " )
+#   if ( "${OpenMP_C_LIBRARIES}" MATCHES "iomp" )
+#       message ( STATUS "Using Intel OpenMP" )
+#       set ( MKL_THREADING "intel_thread" )
+#       # find_package ( MKL CONFIG REQUIRED )
+#       message ( STATUS "MKL threading: ${MKL_THREADING}" )
+#   endif ( )
+else ( )
+    # OpenMP has been disabled
+    set ( OpenMP_C_FOUND OFF )
+endif ( )
 
 #-------------------------------------------------------------------------------
 # CUDA warning on Windows with MSVC
