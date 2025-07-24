@@ -1111,7 +1111,7 @@ build type).  The static libraries will not be built (since
   recommended.  Using the Intel C compiler (icx), GNU Fortran (gfortran or
   f95), and the Intel MKL BLAS together will result in two OpenMP libraries
   being linked (Intel's libiomp and the GNU libgomp).  This is a recipe for
-  disaster, and the cmake scripts check this and report fatal error if it
+  disaster, and the cmake scripts check this and report fatal error if it's
   attempted.  Other cases lead to a cmake warning.  If you get the warning,
   check your built libraries and ensure that only one OpenMP library is in
   use (GNU: libgomp, Intel: libiomp, Clang: libomp).  If you see this case,
