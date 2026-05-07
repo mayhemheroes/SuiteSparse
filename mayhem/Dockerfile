@@ -6,14 +6,12 @@ RUN echo "Acquire::Retries \"5\";" > /etc/apt/apt.conf.d/80retries && \
     build-essential cmake clang git
 
 # Download and build METIS
-RUN git clone --depth=1 https://github.com/KarypisLab/GKlib.git /gklib && \
+RUN git clone --depth=1 --branch METIS-v5.1.1-DistDGL-0.5 https://github.com/KarypisLab/GKlib.git /gklib && \
     git clone --depth=1 --branch v5.1.1-DistDGL-v0.5 https://github.com/KarypisLab/METIS.git /metis-src
 
 RUN cd /metis-src && \
-    mkdir -p build && cd build && \
-    cmake .. -DGKLIB_PATH=/gklib -DCMAKE_BUILD_TYPE=Release \
-             -DCMAKE_C_COMPILER=clang -DSHARED=0 && \
-    make -j8
+    make config gklib_path=/gklib cc=clang && \
+    make -C build -j8
 
 COPY . /repo
 RUN clang++ /repo/mayhem/fuzz_libmetis__InitRandom.cpp -fsanitize=fuzzer,address \
